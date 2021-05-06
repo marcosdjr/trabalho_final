@@ -1,3 +1,5 @@
+#testando
+
 from mysql.connector import connect
 
 CONFIGURACOES_BD = {
