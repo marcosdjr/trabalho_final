@@ -1,3 +1,4 @@
+#teste
 from flask import Flask, jsonify, request
 from main import query, execute
 from decimal import Decimal
