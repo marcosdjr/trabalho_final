@@ -1103,3 +1103,5 @@ python/body_insomnia.PNG
 python/__pycache__/main.cpython-37.pyc
 python/.idea/python.iml
 .idea/trabalho_final.iml
+*.PNG
+*.pyc

@@ -13,12 +13,6 @@ app = Flask(__name__)
 #    elif request.method == "POST":
 #        return request.json
 
-#@app.route("/usuarios", methods=["POST"])
-#def login():
-#    email = request.json["email"]
-#    senha = request.json["senha"]
-#    return jsonify(query(f"SELECT * FROM usuarios WHERE email = %s and senha=%s", (email, senha)))
-
 def update(tabela, chave, valor_chave, colunas, valores):
     sets = [f"{coluna} = %s" for coluna in colunas]
     execute(f"""UPDATE {tabela} SET {",".join(sets)} WHERE {chave} = %s""", valores + [valor_chave])
@@ -38,13 +32,13 @@ def inserir_diretores():
     return jsonify(query("SELECT * FROM diretores"))
 
 #Inserir usuarios
-@app.route("/usuarios", methods=["POST"])
-def inserir_usuarios():
-    nome_completo = request.json["nome"]
-    cpf = request.json["cpf"]
+#@app.route("/usuarios", methods=["POST"])
+#def inserir_usuarios():
+#    nome_completo = request.json["nome"]
+#    cpf = request.json["cpf"]
 
-    insert("usuarios" , ["nome_completo" , "cpf"] , [nome_completo, cpf,])
-    return jsonify(query("SELECT * FROM usuarios"))
+#    insert("usuarios" , ["nome_completo" , "cpf"] , [nome_completo, cpf,])
+#    return jsonify(query("SELECT * FROM usuarios"))
 
 #Inserir gêneros
 @app.route("/generos", methods=["POST"])
