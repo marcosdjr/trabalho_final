@@ -47,6 +47,8 @@ def select(tabela, chave=1, valor_chave=1, limit=100, offset=0):
 def select_like(tabela, chave=1, valor_chave=1, limit=100, offset=0):
     return query(f"""SELECT * FROM {tabela} WHERE {chave} LIKE %s LIMIT {limit} offset {offset}""", (f"%{valor_chave}%",))
 
+
+
 #insert("diretores",["id","nome_completo"],["1","RobertoSantucci"])
 #insert("diretores",["id","nome_completo"],["2","JoséPadilha"])
 #insert("diretores",["id","nome_completo"],["3","CláudioTorres"])

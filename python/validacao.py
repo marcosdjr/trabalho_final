@@ -27,17 +27,27 @@ def valida_diretor(nome_completo):
 #_________________________
 
 def valida_filme(titulo, ano, classificacao, preco, diretores_id, generos_id):
+
+    if len(titulo) == 0:
+        return False
+
+
+    if len(ano) != 4:
+        return False
+
+    if len(classificacao) != 2:
+        return False
+
+    if float(preco) > 100.00:
+        return False
+
+    if diretores_id == 0:
+        return False
+
+    if generos_id == 0:
+        return False
+
     return True
-    #if len(titulo) == 0:
-    #    return False
 
-    #return True
-    #if len(ano) > 4:
-        #return False
-
-    #if len(classificacao) > 2:
-        #return False
-
-    #if preco > 100.00:
-        #return False
-
+def valida_locacao(data_inicio, data_fim, filmes_id, usuarios_id):
+    return True
