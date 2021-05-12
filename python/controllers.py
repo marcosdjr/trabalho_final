@@ -1,3 +1,5 @@
+import random
+
 from flask import Flask, jsonify, request
 from datetime import datetime
 from main import query, execute
@@ -6,19 +8,20 @@ from models import insert_genero, get_genero, update_genero, delete_genero, sele
 from models import insert_diretor, get_diretor, update_diretor, delete_diretor, select_diretores
 from models import insert_usuario, get_usuario, update_usuario, delete_usuario, select_usuarios
 from models import insert_filme, get_filme, update_filme, delete_filme, select_filmes
-from models import insert_locacao, get_locacao, update_locacao, delete_locacao, select_locacao
-from models import insert_pagamento, get_pagamento
+from models import insert_locacao, get_locacao, update_locacao, delete_locacao, select_locacao, select_locacoes
+from models import insert_pagamento, get_valor_locacao, delete_pagamento
 
 
 from serializadores import usuario_from_web, usuario_from_db,  nome_usuario_from_web
 from serializadores import genero_from_web, genero_from_db, nome_genero_from_web
 from serializadores import diretor_from_web, diretor_from_db,  nome_diretor_from_web
 from serializadores import filme_from_web, filme_from_db,  titulo_filme_from_web
-from serializadores import locacao_from_web, locacao_from_db,  id_locacao_from_web
+from serializadores import locacao_from_web, locacao_from_db,  id_locacao_from_web, locacoes_from_db
 from serializadores import pagamento_from_web, pagamento_from_db,  id_pagamento_from_web
 
 from validacao import valida_usuario, valida_genero, valida_diretor, valida_filme, valida_locacao
 
+from random import randint
 
 app = Flask(__name__)
 
@@ -172,12 +175,15 @@ def buscar_filme():
 #Locações
 @app.route("/locacoes", methods=["POST"])
 def inserir_locacao():
-    locacao = locacao_from_web(**request.json)  # 3 - formata o que vem da internet
+    locacao = locacao_from_web(**request.json)# 3 - formata o que vem da internet
     pag = pagamento_from_web(**request.json)
     if valida_locacao(**locacao):
         id_locacao = insert_locacao(**locacao)
-        #get_locacao(id_locacao)
-        insert_pagamento(id_locacao, **pag)
+        valorr = get_valor_locacao(id_locacao)
+        status_pag = ("aprovado", "em análise", "reprovado")
+        status = random.choice(status_pag)
+        cod_pag= randint(0, 88888)
+        insert_pagamento(id_locacao, codigo_pagamento=cod_pag, status=status, valor=valorr, **pag)
         loc = select_locacao(id_locacao)
 
         return jsonify(locacao_from_db(loc))
@@ -197,6 +203,7 @@ def alterar_locacao(id):
 @app.route("/locacoes/<int:id>", methods=["DELETE"])
 def apagar_locacao(id):
     try:
+        delete_pagamento(id)
         delete_locacao(id)
         return "", 204
     except:
@@ -206,31 +213,8 @@ def apagar_locacao(id):
 def buscar_locacao():
     id = id_locacao_from_web(**request.args)
     locacoes = select_locacoes(id)
-    locacoes_from_db = [locacao_from_db(locacao) for locacao in locacoes]
-    return jsonify(locacoes_from_db)
-
-
-#Fazer uma locação => enviar id_filme, id_usuario, tipo_pagamento, data_inicio
-# Criar um pagamento, junto com a locação
-# Colocar a data de fim 48h depois da data de inicio (automático)
-# Preencher o valor do pagamento com o valor do filme
-# Gerar um código de pagamento aleatório pra preencher no código de pagamento
-# Colocar o status aleatório
-
-
-#Pagamento
-
-
-
-
-
-
-
-
-
-
-
-
+    locac_from_db = [locacoes_from_db(locacao) for locacao in locacoes]
+    return jsonify(locac_from_db)
 
 
 #Deixar isso sempre por último

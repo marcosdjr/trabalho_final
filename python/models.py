@@ -99,8 +99,16 @@ def get_pagamento(id_pagamento):
 def update_locacao(id_locacao, filmes_id, usuarios_id):
     update("locacoes", "id", id_locacao, ["filmes_id", "usuarios_id"], [filmes_id, usuarios_id])
 
-def delete_locacao(id_locacao):
-    delete("locacoes", "id", id_locacao)
+def delete_locacao(id):
+    delete("locacoes", "id", id)
+def delete_pagamento(locacoes_id):
+    delete("pagamento", "locacoes_id", locacoes_id)
 
 def select_locacao(id_locacao):
     return query("SELECT locacoes.id, data_fim, status, valor, data, codigo_pagamento, filmes_id, usuarios_id, tipo, data_inicio from locacoes inner join pagamento on pagamento.locacoes_id = locacoes.id where locacoes.id = %s", [id_locacao])[0]
+
+def select_locacoes(id):
+    return select_like("locacoes", "id", id)
+
+def get_valor_locacao(id_locacao):
+    return query("SELECT preco from filmes inner join locacoes on locacoes.filmes_id = filmes.id WHERE filmes.id = %s", [id_locacao])[0]["preco"]
